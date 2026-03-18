@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Mời – Đại Hội Đại Biểu Đoàn TNCS Khoa CNTT</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --ink: #020a1a;
+            --cyan: #00e5f5;
+            --gold: #e8c96a;
+            --gold2: #f5e09a;
+            --red: #e53935;
+            --white: #f0f6ff;
+            --muted: rgba(240, 246, 255, .55);
+            --f: 'Lexend Deca', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--ink);
+            color: var(--white);
+            font-family: var(--f);
+            overflow-x: hidden;
+            cursor: none
+        }
+
+        #s2 {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Lớp bọc các vệt sao băng, z-index cao để đè lên text */
+        .s2-stars-wrap {
+            position: absolute;
+            inset: 0;
+            /* Phủ kín section 5 */
+            pointer-events: none;
+            /* Không chặn click chuột vào các thẻ bên dưới */
+            z-index: 50;
+            /* Đè lên chữ và thẻ card */
+        }
+
+        /* Style cho từng vệt sao băng (hình viên thuốc) */
+        .s2-star-pill {
+            position: absolute;
+            border-radius: 50px;
+            /* Gradient màu tím/xanh giống hệt hình ảnh tham khảo */
+            background: linear-gradient(180deg, #d4a5ff 0%, #74d2ff 100%);
+            opacity: 0;
+            /* Bắt đầu luôn tàng hình để GSAP điều khiển */
+            will-change: transform, opacity;
+            box-shadow: 0 4px 15px rgba(116, 210, 255, 0.3);
+        }
+
+        /* ── CURSOR ── */
+        #cur {
+            position: fixed;
+            width: 9px;
+            height: 9px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            will-change: transform
+        }
+
+        #cur2 {
+            position: fixed;
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(232, 201, 106, .38);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            will-change: transform
+        }
+
+        /* ── STARFIELD ── */
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            animation: twink var(--d) ease-in-out infinite alternate
+        }
+
+        @keyframes twink {
+            0% {
+                opacity: .05;
+                transform: scale(.6)
+            }
+
+            100% {
+                opacity: .9;
+                transform: scale(1.4)
+            }
+        }
+
+        /* ── SPACE BG ── */
+        #space-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .sp {
+            position: absolute;
+            will-change: transform
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 500;
+            padding: 16px 52px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(rgba(2, 10, 26, .92), transparent);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px
+        }
+
+        .nav-left .n1 {
+            font-size: .58rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-family: 'Space Mono', monospace;
+            opacity: .75
+        }
+
+        .nav-left .n2 {
+            font-size: .92rem;
+            font-weight: 800;
+            letter-spacing: .3px
+        }
+
+        .nav-star {
+            width: 40px;
+            height: 40px;
+            background: var(--red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            box-shadow: 0 0 20px rgba(229, 57, 53, .5);
+            animation: starPulse 2.2s ease-in-out infinite
+        }
+
+        @keyframes starPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(229, 57, 53, .45)
+            }
+
+            50% {
+                box-shadow: 0 0 38px rgba(229, 57, 53, .8)
+            }
+        }
+
+        .nav-right {
+            font-family: 'Space Mono', monospace;
+            font-size: .62rem;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-align: right
+        }
+
+        main {
+            position: relative;
+            z-index: 2
+        }
+
+        /* ═══════════════════════════════════════════
+   SHARED EDITORIAL HELPERS
+═══════════════════════════════════════════ */
+        /* Each panel is tall, content floats freely */
+        .panel {
+            position: relative;
+            min-height: 100vh;
+            padding: 0 52px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* floating label — small, uppercase, monospace */
+        .label {
+            font-family: 'Space Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: .6;
+            color: var(--gold);
+        }
+
+        /* giant display number */
+        .disp-num {
+            font-size: clamp(5rem, 15vw, 12rem);
+            font-weight: 900;
+            line-height: .85;
+            color: rgba(232, 201, 106, .07);
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* headline */
+        .hl {
+            font-size: clamp(2.8rem, 7vw, 6rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .hl.gold {
+            color: var(--gold)
+        }
+
+        .hl.cyan {
+            color: var(--cyan)
+        }
+
+        .hl.red {
+            color: var(--red)
+        }
+
+        /* sub-copy */
+        .copy {
+            font-size: clamp(.85rem, 1.8vw, 1.1rem);
+            font-weight: 600;
+            line-height: 1.7;
+            color: var(--muted);
+            max-width: 420px;
+        }
+
+        /* pill tag */
+        .pill {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1.5px solid rgba(232, 201, 106, .35);
+            border-radius: 100px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            background: rgba(232, 201, 106, .06);
+        }
+
+        /* divider line */
+        .hline {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(232, 201, 106, .3), rgba(0, 229, 245, .2), transparent);
+        }
+
+        /* info box */
+        .info-box {
+            padding: 20px 24px;
+            border: 1px solid rgba(232, 201, 106, .18);
+            background: rgba(5, 15, 40, .7);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+        }
+
+        .info-box .ib-label {
+            font-family: 'Space Mono', monospace;
+            font-size: .55rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 6px;
+        }
+
+        .info-box .ib-val {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--white);
+            line-height: 1.2;
+        }
+
+        /* ═══════════════════════════════════════════
+   S1 — HERO (computer floating, text scattered)
+═══════════════════════════════════════════ */
+        #s1 {
+            min-height: 100vh;
+            padding-top: 90px;
+            overflow: hidden;
+        }
+
+        .s1-inner {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        /* Text column */
+        .s1-text {
+            position: relative;
+            z-index: 3;
+            padding: 40px 0;
+        }
+
+        .s1-eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: .62rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: .8;
+        }
+
+        .s1-title {
+            font-size: clamp(2.4rem, 5.5vw, 5rem);
+            font-weight: 900;
+            line-height: .95;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .s1-title .t-line {
+            display: block
+        }
+
+        .s1-title .t-gold {
+            color: var(--gold)
+        }
+
+        .s1-title .t-cyan {
+            color: var(--cyan)
+        }
+
+        .s1-sub {
+            font-size: clamp(.88rem, 1.6vw, 1rem);
+            font-weight: 600;
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 32px;
+            max-width: 380px;
+        }
+
+        .s1-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .s1-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .s1-meta-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(232, 201, 106, .1);
+            border: 1px solid rgba(232, 201, 106, .25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .s1-meta-text {
+            font-size: .88rem;
+            font-weight: 700;
+            color: var(--white)
+        }
+
+        .s1-meta-text span {
+            display: block;
+            font-size: .65rem;
+            font-weight: 500;
+            color: var(--muted)
+        }
+
+        /* Computer column */
+        .s1-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .computer-wrap {
+            position: relative;
+            animation: floatPC 5.5s ease-in-out infinite;
+            width: min(540px, 48vw)
+        }
+
+        @keyframes floatPC {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-.5deg)
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(.5deg)
+            }
+        }
+
+        .computer-svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 50px rgba(0, 229, 245, .15)) drop-shadow(0 20px 40px rgba(0, 0, 0, .7))
+        }
+
+        .screen-inner {
+            position: absolute;
+            top: 6.5%;
+            left: 8%;
+            right: 8%;
+            height: 63%;
+            background: rgba(2, 8, 22, .94);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column
+        }
+
+        .scanline {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, .06) 3px, rgba(0, 0, 0, .06) 4px);
+            pointer-events: none;
+            z-index: 1
+        }
+
+        .screen-topbar {
+            padding: 4px 10px;
+            background: rgba(232, 201, 106, .07);
+            border-bottom: 1px solid rgba(232, 201, 106, .12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Space Mono', monospace;
+            font-size: .46rem;
+            color: rgba(232, 201, 106, .45);
+            letter-spacing: 1.5px;
+            flex-shrink: 0
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 3px
+        }
+
+        .dot.r {
+            background: #e53935
+        }
+
+        .dot.y {
+            background: var(--gold)
+        }
+
+        .dot.g {
+            background: #32d74b
+        }
+
+        .screen-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            gap: 6px
+        }
+
+        .sb-badge {
+            background: var(--red);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .85rem;
+            box-shadow: 0 0 12px rgba(229, 57, 53, .55)
+        }
+
+        .sb-org {
+            font-size: .52rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: .85
+        }
+
+        .sb-invite {
+            font-size: .7rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--muted)
+        }
+
+        .sb-guest {
+            font-size: .56rem;
+            font-weight: 700;
+            color: rgba(232, 201, 106, .7);
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1.5px
+        }
+
+        .sb-title {
+            font-size: clamp(.85rem, 2vw, 1.15rem);
+            font-weight: 900;
+            line-height: .95;
+            letter-spacing: -1px
+        }
+
+        .sb-edition {
+            font-size: .5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border: 1px solid rgba(232, 201, 106, .3);
+            background: rgba(232, 201, 106, .07)
+        }
+
+        .blink {
+            display: inline-block;
+            width: 6px;
+            height: .9em;
+            background: var(--cyan);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: bl .95s step-end infinite
+        }
+
+        @keyframes bl {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+   S2 — THƯ MỜI (editorial: moon left, text right scattered)
+═══════════════════════════════════════════ */
+        #s2 {
+            min-height: 120vh;
+            padding: 0 52px;
+            overflow: hidden;
+        }
+
+        .s2-inner {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 120vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .s2-moon {
+            position: relative;
+            animation: moonRock 7s ease-in-out infinite;
+        }
+
+        @keyframes moonRock {
+
+            0%,
+            100% {
+                transform: rotate(-1deg) translateY(0)
+            }
+
+            40% {
+                transform: rotate(.8deg) translateY(-14px)
+            }
+
+            70% {
+                transform: rotate(-.6deg) translateY(-8px)
+            }
+        }
+
+        .moon-svg {
+            width: min(520px, 44vw);
+            height: auto;
+            filter: drop-shadow(0 0 60px rgba(232, 201, 106, .12)) drop-shadow(0 20px 50px rgba(0, 0, 0, .7))
+        }
+
+        .moon-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 74%;
+            text-align: center
+        }
+
+        .mc-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: .52rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            opacity: .7;
+            margin-bottom: 8px
+        }
+
+        .mc-main-title {
+            font-size: clamp(.85rem, 1.8vw, 1.05rem);
+            font-weight: 900;
+            color: var(--white);
+            line-height: 1.4;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .3px
+        }
+
+        .mc-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px auto;
+            width: 85%
+        }
+
+        .mc-divider::before,
+        .mc-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(232, 201, 106, .2)
+        }
+
+        .mc-divider span {
+            color: var(--gold);
+            font-size: .75rem
+        }
+
+        .mc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin-bottom: 8px
+        }
+
+        .mc-box {
+            padding: 8px 10px;
+            border: 1px solid rgba(232, 201, 106, .16);
+            background: rgba(2, 8, 22, .65);
+            border-radius: 4px;
+            text-align: left
+        }
+
+        .mc-box-l {
+            font-family: 'Space Mono', monospace;
+            font-size: .46rem;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 3px
+        }
+
+        .mc-box-v {
+            font-size: .8rem;
+            font-weight: 900;
+            color: var(--white);
+            line-height: 1.2
+        }
+
+        .mc-sign {
+            font-size: .65rem;
+            font-weight: 600;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-top: 6px
+        }
+
+        .mc-sign strong {
+            color: var(--gold2);
+            font-weight: 800
+        }
+
+        /* Text column — scattered vertically */
+        .s2-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 60px 0;
+        }
+
+        .s2-block {
+            margin-bottom: 52px
+        }
+
+        .s2-kicker {
+            font-family: 'Space Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: .7
+        }
+
+        .s2-big {
+            font-size: clamp(2rem, 4.5vw, 3.8rem);
+            font-weight: 900;
+            line-height: .95;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px
+        }
+
+        .s2-body {
+            font-size: .95rem;
+            font-weight: 600;
+            color: var(--muted);
+            line-height: 1.75;
+            max-width: 380px
+        }
+
+        /* ═══════════════════════════════════════════
+   S3 — HORIZONTAL SCROLL (câu kính mời)
+═══════════════════════════════════════════ */
+        #hscrollWrapper {
+            position: relative;
+            z-index: 3
+        }
+
+        .hscroll-pin {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(8, 2, 28, .7), transparent);
+        }
+
+        /* Floating label top-left */
+        .hs-label {
+            position: absolute;
+            top: 32px;
+            left: 52px;
+            font-family: 'Space Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            opacity: .6;
+        }
+
+        /* track */
+        .hs-track {
+            display: flex;
+            align-items: baseline;
+            gap: 0;
+            will-change: transform;
+            flex-shrink: 0;
+            padding: 0 12vw;
+        }
+
+        /* word chunks */
+        .hw {
+            font-size: clamp(4rem, 9vw, 8.5rem);
+            font-weight: 900;
+            white-space: nowrap;
+            padding: 0 .28em;
+            line-height: 1;
+            letter-spacing: -3px;
+            opacity: 0;
+            transform: translateY(40px) scale(.94);
+            transition: opacity .5s ease, transform .5s ease;
+            will-change: opacity, transform;
+        }
+
+        .hw.vis {
+            opacity: 1;
+            transform: translateY(0) scale(1)
+        }
+
+        .hw.c1 {
+            color: var(--white)
+        }
+
+        .hw.c2 {
+            color: var(--gold);
+            font-style: italic
+        }
+
+        .hw.c3 {
+            color: var(--cyan)
+        }
+
+        .hw.c4 {
+            color: var(--white)
+        }
+
+        .hw.c5 {
+            color: var(--gold2)
+        }
+
+        .hw.c6 {
+            color: var(--white)
+        }
+
+        .hw.c7 {
+            color: var(--cyan);
+            font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+            font-style: italic
+        }
+
+        .hw.c8 {
+            color: var(--gold)
+        }
+
+        .hw.sep {
+            color: rgba(232, 201, 106, .25);
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            padding: 0 .15em;
+            opacity: .5 !important;
+            transform: none !important
+        }
+
+        .hw.sep.vis {
+            opacity: .5 !important
+        }
+
+        /* Astronaut */
+        #hAstro {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 90px;
+            pointer-events: none;
+            will-change: transform;
+            filter: drop-shadow(0 0 16px rgba(232, 201, 106, .55)) drop-shadow(0 0 32px rgba(0, 229, 245, .3));
+        }
+
+        /* scroll hint */
+        .hs-hint {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: 3px;
+            color: rgba(232, 201, 106, .45);
+            text-transform: uppercase;
+            animation: hintFlash 2s ease-in-out infinite;
+        }
+
+        @keyframes hintFlash {
+
+            0%,
+            100% {
+                opacity: .35
+            }
+
+            50% {
+                opacity: .9
+            }
+        }
+
+        .hs-arr {
+            animation: arrBounce 1s ease-in-out infinite
+        }
+
+        @keyframes arrBounce {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            50% {
+                transform: translateX(7px)
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+   S4 — ROCKET TIMELINE
+═══════════════════════════════════════════ */
+        #s4 {
+            padding: 100px 52px;
+            min-height: auto;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .s4-header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .s4-hl {
+            font-size: clamp(2.5rem, 5.5vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1
+        }
+
+        .s4-hl span {
+            color: var(--gold)
+        }
+
+        .s4-note {
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-align: right;
+            max-width: 220px;
+            line-height: 1.65
+        }
+
+        /* timeline */
+        .tl-outer {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0
+        }
+
+        .tl-track {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(232, 201, 106, .12) 4%, rgba(232, 201, 106, .3) 12%, rgba(232, 201, 106, .3) 88%, rgba(232, 201, 106, .12) 96%, transparent);
+            z-index: 0
+        }
+
+        #tlProg {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to bottom, var(--gold), var(--cyan));
+            box-shadow: 0 0 10px rgba(232, 201, 106, .7), 0 0 22px rgba(232, 201, 106, .3);
+            z-index: 1;
+            pointer-events: none
+        }
+
+        #tlRocket {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            top: 0;
+            width: 50px;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 0 14px rgba(232, 201, 106, .8)) drop-shadow(0 0 28px rgba(255, 110, 0, .4))
+        }
+
+        .rfl {
+            animation: fPulse .32s ease-in-out infinite alternate;
+            transform-origin: 50% 90%
+        }
+
+        @keyframes fPulse {
+            0% {
+                opacity: .4;
+                transform: scaleY(.6)
+            }
+
+            100% {
+                opacity: 1;
+                transform: scaleY(1.3)
+            }
+        }
+
+        .tl-items {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2
+        }
+
+        .tl-item {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            align-items: center;
+            padding: 5px 0
+        }
+
+        .tl-item:nth-child(odd) .tl-l {
+            grid-column: 1;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 24px
+        }
+
+        .tl-item:nth-child(odd) .tl-c {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px
+        }
+
+        .tl-item:nth-child(odd) .tl-r {
+            grid-column: 3
+        }
+
+        .tl-item:nth-child(even) .tl-l {
+            grid-column: 1
+        }
+
+        .tl-item:nth-child(even) .tl-c {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px
+        }
+
+        .tl-item:nth-child(even) .tl-r {
+            grid-column: 3;
+            padding-left: 24px
+        }
+
+        .tl-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(232, 201, 106, .28);
+            background: var(--ink);
+            flex-shrink: 0;
+            transition: all .3s
+        }
+
+        .tl-item.hl .tl-dot {
+            border-color: rgba(229, 57, 53, .6);
+            width: 18px;
+            height: 18px;
+            box-shadow: 0 0 8px rgba(229, 57, 53, .4)
+        }
+
+        .tl-dot.lit {
+            background: var(--gold) !important;
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 12px rgba(232, 201, 106, .8), 0 0 24px rgba(232, 201, 106, .35) !important
+        }
+
+        .tl-item.hl .tl-dot.lit {
+            background: var(--red) !important;
+            border-color: var(--red) !important;
+            box-shadow: 0 0 12px rgba(229, 57, 53, .8) !important
+        }
+
+        .tl-n {
+            font-family: 'Space Mono', monospace;
+            font-size: .48rem;
+            letter-spacing: 1px;
+            color: rgba(232, 201, 106, .48)
+        }
+
+        .tl-item.hl .tl-n {
+            color: rgba(229, 57, 53, .6)
+        }
+
+        .tl-card {
+            display: inline-block;
+            max-width: 340px;
+            padding: 11px 18px;
+            border: 1px solid rgba(255, 255, 255, .07);
+            background: rgba(5, 15, 42, .65);
+            backdrop-filter: blur(8px);
+            border-radius: 5px;
+            font-size: .85rem;
+            font-weight: 600;
+            line-height: 1.55;
+            color: rgba(240, 246, 255, .68);
+            transition: all .3s
+        }
+
+        .tl-item:nth-child(odd) .tl-card {
+            border-right: 2px solid rgba(232, 201, 106, .18);
+            text-align: right
+        }
+
+        .tl-item:nth-child(even) .tl-card {
+            border-left: 2px solid rgba(232, 201, 106, .18)
+        }
+
+        .tl-item.hl .tl-card {
+            background: rgba(229, 57, 53, .07);
+            border-color: rgba(229, 57, 53, .3) !important;
+            color: rgba(240, 246, 255, .92);
+            font-weight: 800
+        }
+
+        .tl-item.lit .tl-card {
+            background: rgba(232, 201, 106, .09);
+            border-color: rgba(232, 201, 106, .35) !important;
+            color: var(--white)
+        }
+
+        .tl-item.lit.hl .tl-card {
+            background: rgba(229, 57, 53, .12);
+            border-color: rgba(229, 57, 53, .4) !important
+        }
+
+        /* ═══════════════════════════════════════════
+   S5 — LEGO SIGN-OFF (editorial: spread)
+═══════════════════════════════════════════ */
+        #s5 {
+            min-height: 100vh;
+            padding: 100px 52px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .s5-inner {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .s5-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 80px;
+            gap: 40px;
+            flex-wrap: wrap
+        }
+
+        .s5-hl {
+            font-size: clamp(2.5rem, 5.5vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1
+        }
+
+        .s5-hl span {
+            color: var(--gold)
+        }
+
+        .s5-sub {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--muted);
+            line-height: 1.75;
+            max-width: 340px;
+            align-self: flex-end
+        }
+
+        .lego-row {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: flex-start
+        }
+
+        .lego-wrap {
+            animation: legoFloat var(--lf) ease-in-out infinite
+        }
+
+        @keyframes legoFloat {
+
+            0%,
+            100% {
+                transform: rotate(-1.5deg) translateY(0)
+            }
+
+            50% {
+                transform: rotate(1.5deg) translateY(-16px)
+            }
+        }
+
+        .lego-wrap:nth-child(2) {
+            animation-delay: -2.2s
+        }
+
+        .lego-wrap:nth-child(3) {
+            animation-delay: -4s
+        }
+
+        .lego-card {
+            position: relative;
+            width: 210px
+        }
+
+        .lego-svg-el {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 12px 32px rgba(0, 0, 0, .6))
+        }
+
+        .lego-inner {
+            position: absolute;
+            top: 21%;
+            left: 9%;
+            right: 9%;
+            bottom: 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px 6px;
+            overflow: hidden
+        }
+
+        .li-icon {
+            font-size: 2.2rem;
+            margin-bottom: 5px
+        }
+
+        .li-org {
+            font-size: .56rem;
+            font-weight: 700;
+            letter-spacing: .3px;
+            color: rgba(240, 246, 255, .5);
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            line-height: 1.4
+        }
+
+        .li-name {
+            font-size: .95rem;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 3px;
+            line-height: 1.15
+        }
+
+        .li-role {
+            font-size: .62rem;
+            color: var(--gold);
+            letter-spacing: .3px;
+            margin-bottom: 8px;
+            font-weight: 700
+        }
+
+        .li-signed {
+            font-style: italic;
+            font-size: .72rem;
+            color: rgba(240, 246, 255, .38);
+            border-top: 1px solid rgba(232, 201, 106, .18);
+            padding-top: 6px;
+            width: 100%;
+            font-weight: 400
+        }
+
+        /* MISC */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(232, 201, 106, .2), rgba(0, 229, 245, .12), transparent);
+            position: relative;
+            z-index: 2;
+            margin: 0 52px
+        }
+
+        footer {
+            padding: 30px 52px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid rgba(232, 201, 106, .07)
+        }
+
+        .f-l {
+            font-size: .7rem;
+            font-weight: 700;
+            color: rgba(240, 246, 255, .28);
+            line-height: 1.7
+        }
+
+        .f-r {
+            font-size: .62rem;
+            color: rgba(240, 246, 255, .2);
+            font-family: 'Space Mono', monospace
+        }
+
+        /* Scroll-reveal class */
+        .sr {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .7s ease, transform .7s ease
+        }
+
+        .sr.in {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .sr-l {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity .7s ease, transform .7s ease
+        }
+
+        .sr-l.in {
+            opacity: 1;
+            transform: translateX(0)
+        }
+
+        .sr-r {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity .7s ease, transform .7s ease
+        }
+
+        .sr-r.in {
+            opacity: 1;
+            transform: translateX(0)
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cur"></div>
+    <div id="cur2"></div>
+    <div id="starfield"></div>
+    <div id="space-bg"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-left">
+            <span class="n1">Đoàn TNCS Hồ Chí Minh</span>
+            <span class="n2">Khoa Công Nghệ Thông Tin</span>
+        </div>
+        <div class="nav-star">⭐</div>
+        <div class="nav-right">TP.HCM · 22/08/2026</div>
+    </nav>
+
+    <main>
+
+        <!-- ════════════════════════════════════════
+     S1 — HERO
+     Left: text scattered, Right: computer
+════════════════════════════════════════ -->
+        <section id="s1" class="panel">
+            <div class="s1-inner">
+
+                <!-- TEXT -->
+                <div class="s1-text">
+                    <p class="s1-eyebrow sr">Đoàn Trường ĐH Nguyễn Tất Thành</p>
+
+                    <h1 class="s1-title sr" style="transition-delay:.1s">
+                        <span class="t-line">ĐẠI HỘI</span>
+                        <span class="t-line t-gold">ĐẠI BIỂU</span>
+                        <span class="t-line" style="font-size:.55em;font-weight:700;color:var(--muted)">ĐOÀN TNCS HỒ CHÍ
+                            MINH</span>
+                    </h1>
+
+                    <p class="s1-sub sr" style="transition-delay:.2s">
+                        Khoa Công Nghệ Thông Tin<br>
+                        Trường Đại Học Nguyễn Tất Thành
+                    </p>
+
+                    <div class="s1-meta sr" style="transition-delay:.3s">
+                        <div class="s1-meta-item">
+                            <div class="s1-meta-icon">🕐</div>
+                            <div class="s1-meta-text">
+                                17h45, ngày 22/08/2026
+                                <span>Thời gian khai mạc</span>
+                            </div>
+                        </div>
+                        <div class="s1-meta-item">
+                            <div class="s1-meta-icon">📍</div>
+                            <div class="s1-meta-text">
+                                Hội Trường Lầu 9, CS 331 Q.12
+                                <span>Trường ĐH Nguyễn Tất Thành</span>
+                            </div>
+                        </div>
+                        <div class="s1-meta-item">
+                            <div class="s1-meta-icon"
+                                style="background:rgba(229,57,53,.1);border-color:rgba(229,57,53,.3)">🏆</div>
+                            <div class="s1-meta-text">
+                                Lần Thứ X · Nhiệm Kỳ 2024–2025
+                                <span>Đại Hội Đại Biểu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPUTER -->
+                <div class="s1-visual sr-r" style="transition-delay:.15s">
+                    <div class="computer-wrap">
+                        <svg class="computer-svg" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="32" y="16" width="616" height="376" rx="18" fill="#0b1828" stroke="#1e3a58"
+                                stroke-width="2.5" />
+                            <rect x="44" y="28" width="592" height="352" rx="11" fill="#020810" />
+                            <rect x="44" y="28" width="592" height="352" rx="11" fill="none"
+                                stroke="rgba(232,201,106,.1)" stroke-width="1" />
+                            <path d="M44 48 L44 28 L64 28" stroke="rgba(232,201,106,.5)" stroke-width="2" fill="none" />
+                            <path d="M636 48 L636 28 L616 28" stroke="rgba(232,201,106,.5)" stroke-width="2"
+                                fill="none" />
+                            <path d="M44 360 L44 380 L64 380" stroke="rgba(232,201,106,.5)" stroke-width="2"
+                                fill="none" />
+                            <path d="M636 360 L636 380 L616 380" stroke="rgba(232,201,106,.5)" stroke-width="2"
+                                fill="none" />
+                            <circle cx="340" cy="394" r="4" fill="#00e5f5" opacity=".5" />
+                            <rect x="300" y="396" width="80" height="44" rx="5" fill="#0b1828" stroke="#1e3a58"
+                                stroke-width="1.5" />
+                            <rect x="180" y="438" width="320" height="22" rx="11" fill="#0b1828" stroke="#1e3a58"
+                                stroke-width="1.5" />
+                            <rect x="148" y="464" width="384" height="26" rx="6" fill="#0a1525" stroke="#1e3a58"
+                                stroke-width="1.5" />
+                        </svg>
+                        <div class="screen-inner">
+                            <div class="screen-topbar">
+                                <div><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                                </div>
+                                <span>THU_MOI_DAIHOI_X.vn</span>
+                                <span>22/08/2026</span>
+                            </div>
+                            <div class="screen-body">
+                                <div class="sb-badge">⭐</div>
+                                <p class="sb-org">Đoàn Khoa CNTT · ĐHNT</p>
+                                <p class="sb-invite">Trân trọng kính mời</p>
+                                <p class="sb-guest">BAN CHỦ NHIỆM KHOA CNTT</p>
+                                <h2 class="sb-title">ĐẠI HỘI<br>ĐẠI BIỂU</h2>
+                                <div class="sb-edition">Lần Thứ X · 2024–2025<span class="blink"></span></div>
+                            </div>
+                            <div class="scanline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ════════════════════════════════════════
+     S2 — THƯ MỜI
+     Left: moon, Right: scattered text blocks
+════════════════════════════════════════ -->
+        <section id="s2" class="panel">
+            <div class="s2-inner">
+
+                <!-- MOON -->
+                <div class="s2-moon sr-l">
+                    <svg class="moon-svg" viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="mG" cx="36%" cy="32%" r="68%">
+                                <stop offset="0%" stop-color="#2a2050" />
+                                <stop offset="50%" stop-color="#120c30" />
+                                <stop offset="100%" stop-color="#04020e" />
+                            </radialGradient>
+                            <radialGradient id="cG" cx="50%" cy="40%" r="50%">
+                                <stop offset="0%" stop-color="rgba(0,0,0,.4)" />
+                                <stop offset="100%" stop-color="transparent" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="280" cy="280" r="265" fill="url(#mG)" />
+                        <circle cx="165" cy="190" r="40" fill="url(#cG)" stroke="rgba(232,201,106,.12)"
+                            stroke-width="1.5" />
+                        <circle cx="378" cy="165" r="26" fill="url(#cG)" stroke="rgba(232,201,106,.1)"
+                            stroke-width="1" />
+                        <circle cx="185" cy="368" r="20" fill="url(#cG)" stroke="rgba(232,201,106,.1)"
+                            stroke-width="1" />
+                        <circle cx="418" cy="352" r="33" fill="url(#cG)" stroke="rgba(232,201,106,.12)"
+                            stroke-width="1.5" />
+                        <circle cx="302" cy="430" r="16" fill="url(#cG)" stroke="rgba(232,201,106,.08)"
+                            stroke-width="1" />
+                        <ellipse cx="215" cy="165" rx="72" ry="48" fill="rgba(232,201,106,.04)"
+                            transform="rotate(-18,215,165)" />
+                        <circle cx="280" cy="280" r="265" fill="none" stroke="rgba(232,201,106,.16)"
+                            stroke-width="1.5" />
+                        <circle cx="280" cy="280" r="272" fill="none" stroke="rgba(232,201,106,.05)" stroke-width="5" />
+                    </svg>
+                    <div class="moon-content">
+                        <p class="mc-tag">— Thư Mời —</p>
+                        <p class="mc-main-title">BCH Đoàn Khoa CNTT<br>kính mời<br><span style="color:var(--gold)">Ban
+                                Chủ Nhiệm Khoa</span></p>
+                        <div class="mc-divider"><span>✦</span></div>
+                        <div class="mc-grid">
+                            <div class="mc-box">
+                                <div class="mc-box-l">🕐 Thời gian</div>
+                                <div class="mc-box-v">17h45<br>22/08/2026</div>
+                            </div>
+                            <div class="mc-box">
+                                <div class="mc-box-l">📍 Địa điểm</div>
+                                <div class="mc-box-v">Lầu 9<br>CS 331 Q.12</div>
+                            </div>
+                        </div>
+                        <div class="mc-divider"><span>✦</span></div>
+                        <div class="mc-sign">
+                            <strong>TP.HCM, 25/08/2024</strong><br>
+                            TM. BCH Đoàn Khoa · Phó Bí Thư<br>
+                            <span style="font-style:italic;color:var(--gold)">(Đã ký) — Tống Phước Thiện</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCATTERED TEXT RIGHT -->
+                <div class="s2-text">
+
+                    <div class="s2-block sr" style="transition-delay:.05s">
+                        <p class="s2-kicker">Đơn vị tổ chức</p>
+                        <h2 class="s2-big" style="color:var(--white)">BAN CHẤP HÀNH<br><span
+                                style="color:var(--gold)">ĐOÀN KHOA</span></h2>
+                        <p class="s2-body">Trường Đại Học Nguyễn Tất Thành<br>Khoa Công Nghệ Thông Tin</p>
+                    </div>
+
+                    <div class="s2-block sr" style="transition-delay:.15s">
+                        <p class="s2-kicker">Đến tham dự</p>
+                        <h2 class="s2-big" style="color:var(--cyan)">ĐẠI HỘI<br>LẦN THỨ X</h2>
+                        <p class="s2-body">Nhiệm Kỳ 2024 – 2025<br>Đoàn TNCS Hồ Chí Minh</p>
+                    </div>
+
+                    <div class="s2-block sr" style="transition-delay:.25s">
+                        <div class="pill">Trân trọng kính mời</div>
+                        <div style="height:16px"></div>
+                        <p class="s2-body" style="max-width:360px;color:rgba(240,246,255,.75)">
+                            Sự hiện diện của quý vị là niềm vinh dự lớn lao. Hân hạnh và mong chờ được đón tiếp.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ════════════════════════════════════════
+     HORIZONTAL SCROLL — câu kính mời lớn
+════════════════════════════════════════ -->
+        <div id="hscrollWrapper">
+            <section id="hscroll">
+                <div class="hscroll-pin" id="hscrollPin">
+                    <div class="hs-label">Cuộn để đọc →</div>
+
+                    <!-- Astronaut -->
+                    <div id="hAstro">
+                        <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="45" cy="62" rx="21" ry="25" fill="#c4d4e8" stroke="#9ab0c8"
+                                stroke-width="1.5" />
+                            <circle cx="45" cy="33" r="19" fill="#ddeeff" stroke="#9ac0de" stroke-width="2" />
+                            <ellipse cx="45" cy="31" rx="12" ry="10.5" fill="#18386a" opacity=".92" />
+                            <ellipse cx="41" cy="28" rx="3.5" ry="2.8" fill="rgba(0,229,245,.42)" />
+                            <ellipse cx="26" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5"
+                                transform="rotate(-10,26,62)" />
+                            <ellipse cx="64" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5"
+                                transform="rotate(10,64,62)" />
+                            <circle cx="20" cy="73" r="5.5" fill="#9ab0c8" />
+                            <circle cx="70" cy="73" r="5.5" fill="#9ab0c8" />
+                            <ellipse cx="37" cy="84" rx="7.5" ry="9.5" fill="#adc0d0" />
+                            <ellipse cx="53" cy="84" rx="7.5" ry="9.5" fill="#adc0d0" />
+                            <ellipse cx="36" cy="92" rx="9.5" ry="4.5" fill="#607080" />
+                            <ellipse cx="54" cy="92" rx="9.5" ry="4.5" fill="#607080" />
+                            <rect x="37" y="55" width="15" height="10" rx="2" fill="#081e3e" opacity=".8" />
+                            <circle cx="41" cy="60" r="1.8" fill="#00e5f5" opacity=".8" />
+                            <circle cx="49" cy="60" r="1.8" fill="#e8c96a" opacity=".8" />
+                            <rect x="33" y="55" width="7" height="14" rx="3" fill="#607888" />
+                            <circle cx="36" cy="70" r="2.5" fill="rgba(0,229,245,.65)" />
+                        </svg>
+                    </div>
+
+                    <div class="hs-track" id="hsTrack">
+                        <span class="hw c3">Sự</span>
+                        <span class="hw c3">hiện diện</span>
+                        <span class="hw c3">của</span>
+                        <span class="hw c3">quý vị</span>
+                        <span class="hw c3">là</span>
+                        <span class="hw c3">niềm</span>
+                        <span class="hw c3">vinh dự</span>
+                        <span class="hw sep">·</span>
+                        <span class="hw c3">của</span>
+                        <span class="hw c3">chúng tôi</span>
+                        <span class="hw sep">✦</span>
+                        <span class="hw c3">Hân hạnh</span>
+                        <span class="hw c3">và</span>
+                        <span class="hw c3">mong chờ</span>
+                        <span class="hw c3">được đón tiếp</span>
+                        <span class="hw sep">·</span>
+                        <span class="hw c3" style="font-size:clamp(3rem,7vw,6.5rem)">Trân trọng!</span>
+                    </div>
+
+                    <div class="hs-hint">
+                        <span class="hs-arr">→</span>
+                        <span>Cuộn để khám phá</span>
+                        <span class="hs-arr">→</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ════════════════════════════════════════
+     S4 — CHƯƠNG TRÌNH (rocket timeline, full width)
+════════════════════════════════════════ -->
+        <section id="s4" style="display:flex;flex-direction:column">
+            <div class="s4-header sr">
+                <div>
+                    <p class="label" style="margin-bottom:12px">Diễn Tiến Buổi Lễ</p>
+                    <h2 class="s4-hl">CHƯƠNG TRÌNH <span>ĐẠI HỘI</span></h2>
+                </div>
+                <p class="s4-note">22 mục · Khai mạc 17h45<br>Hội Trường Lầu 9 · CS 331</p>
+            </div>
+
+            <div class="tl-outer" id="tlOuter">
+                <div class="tl-track"></div>
+                <div id="tlProg"></div>
+                <div id="tlRocket">
+                    <svg viewBox="0 0 46 82" xmlns="http://www.w3.org/2000/svg">
+                        <g class="rfl">
+                            <path d="M10 70 Q23 90 36 70" fill="rgba(255,130,0,.72)" />
+                            <path d="M14 70 Q23 86 32 70" fill="rgba(255,210,0,.62)" />
+                            <path d="M18 70 Q23 78 28 70" fill="rgba(255,255,130,.5)" />
+                        </g>
+                        <path d="M23 4 L40 38 L40 70 L6 70 L6 38 Z" fill="#d4e4f8" stroke="#9ab8e0"
+                            stroke-width="1.5" />
+                        <path d="M23 4 L40 38 L6 38 Z" fill="#eef4ff" />
+                        <circle cx="23" cy="48" r="9" fill="#08142a" />
+                        <circle cx="21" cy="46" r="3" fill="rgba(232,201,106,.55)" />
+                        <path d="M6 56 L0 70 L8 67 Z" fill="#9ab8e0" />
+                        <path d="M40 56 L46 70 L38 67 Z" fill="#9ab8e0" />
+                        <rect x="6" y="54" width="34" height="5" fill="rgba(232,201,106,.28)" />
+                    </svg>
+                </div>
+                <div class="tl-items" id="tlItems">
+                    <div class="tl-item hl">
+                        <div class="tl-l">
+                            <div class="tl-card">Nghi thức khai mạc</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">01</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">02</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Tuyên bố lý do; Giới thiệu Đại biểu và khách mời</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Bầu Đoàn chủ tịch – Giới thiệu Đoàn thư ký</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">03</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">04</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Giới thiệu Ban thẩm tra và báo cáo kết quả thẩm tra</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Đoàn chủ tịch công bố chương trình làm việc</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">05</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">06</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Trình bày dự thảo báo cáo tổng kết</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Trình bày dự thảo phương hướng hoạt động – Lần X</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">07</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">08</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Trình bày dự thảo bản kiểm điểm</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Thảo luận văn kiện</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">09</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">10</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">BCH đương thời tuyên bố mãn nhiệm kỳ</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Trình bày đề án nhân sự – Lần thứ X</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">11</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">12</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Giới thiệu danh sách ứng cử viên</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Rút danh sách ứng cử viên</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">13</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">14</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Bầu tổ bầu cử – Thông qua thể lệ bầu cử</div>
+                        </div>
+                    </div>
+                    <div class="tl-item hl">
+                        <div class="tl-l">
+                            <div class="tl-card">Tiến hành bỏ phiếu bầu BCH – Lần thứ X</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">15</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item hl">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">16</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Công bố kết quả bầu cử, Hội nghị lần thứ nhất</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">BCH Đoàn Khoa nhiệm kỳ mới ra mắt Đại hội</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">17</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">18</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Bầu Đoàn Đại biểu tham dự Đại hội TNCS Trường ĐHNT – Lần IX</div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l">
+                            <div class="tl-card">Khen thưởng các cá nhân và tập thể</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">19</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">20</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Phát biểu của Đoàn cấp trên</div>
+                        </div>
+                    </div>
+                    <div class="tl-item hl">
+                        <div class="tl-l">
+                            <div class="tl-card">Thông qua Nghị quyết Đại hội</div>
+                        </div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">21</span>
+                        </div>
+                        <div class="tl-r"></div>
+                    </div>
+                    <div class="tl-item hl">
+                        <div class="tl-l"></div>
+                        <div class="tl-c">
+                            <div class="tl-dot"></div><span class="tl-n">22</span>
+                        </div>
+                        <div class="tl-r">
+                            <div class="tl-card">Chào cờ bế mạc Đại hội</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ════════════════════════════════════════
+     S5 — LEGO SIGN-OFF
+════════════════════════════════════════ -->
+        <section id="s5">
+            <div class="s5-inner">
+                <div class="s5-top sr">
+                    <div>
+                        <p class="label" style="margin-bottom:14px">Xác Nhận Chính Thức</p>
+                        <h2 class="s5-hl">BAN TỔ CHỨC<br><span>ĐẠI HỘI</span></h2>
+                    </div>
+                    <p class="s5-sub">Hân hạnh và mong chờ được đón tiếp quý vị tại Đại Hội Đại Biểu Lần Thứ X.</p>
+                </div>
+
+                <div class="lego-row">
+                    <div class="lego-wrap sr" style="--lf:5.5s;transition-delay:.05s">
+                        <div class="lego-card">
+                            <svg class="lego-svg-el" viewBox="0 0 210 330" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="70" cy="22" rx="21" ry="9" fill="#c82020" stroke="#a01010"
+                                    stroke-width="1.5" />
+                                <ellipse cx="140" cy="22" rx="21" ry="9" fill="#c82020" stroke="#a01010"
+                                    stroke-width="1.5" />
+                                <rect x="10" y="28" width="190" height="290" rx="8" fill="#c82020" stroke="#a01010"
+                                    stroke-width="2" />
+                                <rect x="18" y="36" width="174" height="274" rx="6" fill="#b01818" />
+                                <rect x="26" y="80" width="158" height="220" rx="5" fill="#9c1010" stroke="#880808"
+                                    stroke-width="1" />
+                            </svg>
+                            <div class="lego-inner">
+                                <div class="li-icon">⭐</div>
+                                <div class="li-org">BTC Đại Hội</div>
+                                <div class="li-name">Trân Trọng Thông Báo</div>
+                                <div class="li-role">TP.HCM · 25/08/2024</div>
+                                <div class="li-signed">Sự hiện diện của quý vị là vinh dự</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lego-wrap sr" style="--lf:6.8s;transition-delay:.15s">
+                        <div class="lego-card">
+                            <svg class="lego-svg-el" viewBox="0 0 210 330" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="70" cy="22" rx="21" ry="9" fill="#c8960a" stroke="#a07808"
+                                    stroke-width="1.5" />
+                                <ellipse cx="140" cy="22" rx="21" ry="9" fill="#c8960a" stroke="#a07808"
+                                    stroke-width="1.5" />
+                                <rect x="10" y="28" width="190" height="290" rx="8" fill="#c8960a" stroke="#a07808"
+                                    stroke-width="2" />
+                                <rect x="18" y="36" width="174" height="274" rx="6" fill="#b08008" />
+                                <rect x="26" y="80" width="158" height="220" rx="5" fill="#9a6e06" stroke="#886004"
+                                    stroke-width="1" />
+                            </svg>
+                            <div class="lego-inner">
+                                <div class="li-icon">🏆</div>
+                                <div class="li-org">TM. BCH Đoàn Khoa · Phó Bí Thư</div>
+                                <div class="li-name">Tống Phước Thiện</div>
+                                <div class="li-role">(Đã ký)</div>
+                                <div class="li-signed">TP.HCM · 25/08/2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lego-wrap sr" style="--lf:4.9s;transition-delay:.25s">
+                        <div class="lego-card">
+                            <svg class="lego-svg-el" viewBox="0 0 210 330" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="70" cy="22" rx="21" ry="9" fill="#1050c8" stroke="#0838a0"
+                                    stroke-width="1.5" />
+                                <ellipse cx="140" cy="22" rx="21" ry="9" fill="#1050c8" stroke="#0838a0"
+                                    stroke-width="1.5" />
+                                <rect x="10" y="28" width="190" height="290" rx="8" fill="#1050c8" stroke="#0838a0"
+                                    stroke-width="2" />
+                                <rect x="18" y="36" width="174" height="274" rx="6" fill="#0840b0" />
+                                <rect x="26" y="80" width="158" height="220" rx="5" fill="#063298" stroke="#042880"
+                                    stroke-width="1" />
+                            </svg>
+                            <div class="lego-inner">
+                                <div class="li-icon">🎓</div>
+                                <div class="li-org">Đoàn Trường ĐH Nguyễn Tất Thành</div>
+                                <div class="li-name">Hân Hạnh Đón Tiếp</div>
+                                <div class="li-role">Nhiệm kỳ 2024–2025</div>
+                                <div class="li-signed">Đại Hội Lần Thứ X</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="f-l">ĐOÀN TNCS HỒ CHÍ MINH – KHOA CÔNG NGHỆ THÔNG TIN<br>TRƯỜNG ĐẠI HỌC NGUYỄN TẤT THÀNH</div>
+        <div class="f-r">ĐẠI HỘI LẦN THỨ X · 2024–2025</div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        /* ── CURSOR ── */
+        const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+        let mx = 0, my = 0, tx = 0, ty = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; gsap.to(cur, { x: mx, y: my, duration: .06 }); });
+        (function loop() { tx += (mx - tx) * .11; ty += (my - ty) * .11; gsap.set(cur2, { x: tx, y: ty }); requestAnimationFrame(loop); })();
+
+        /* ── STARFIELD ── */
+        const sf = document.getElementById('starfield');
+        for (let i = 0; i < 200; i++) {
+            const s = document.createElement('div'), sz = Math.random() * 2.2 + .4;
+            s.className = 'star';
+            Object.assign(s.style, { left: Math.random() * 100 + 'vw', top: Math.random() * 100 + 'vh', width: sz + 'px', height: sz + 'px', '--d': (Math.random() * 3 + 1.5) + 's', animationDelay: (-Math.random() * 4) + 's', opacity: Math.random() * .7 });
+            sf.appendChild(s);
+        }
+
+        /* ── SPACE OBJECTS ── */
+        const SVGs = {
+            astronaut: `<svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"><ellipse cx="45" cy="62" rx="21" ry="25" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5"/><circle cx="45" cy="33" r="19" fill="#ddeeff" stroke="#9ac0de" stroke-width="2"/><ellipse cx="45" cy="31" rx="12" ry="10.5" fill="#18386a" opacity=".92"/><ellipse cx="41" cy="28" rx="3.5" ry="2.8" fill="rgba(0,229,245,.38)"/><ellipse cx="26" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5" transform="rotate(-10,26,62)"/><ellipse cx="64" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5" transform="rotate(10,64,62)"/><circle cx="20" cy="73" r="5.5" fill="#9ab0c8"/><circle cx="70" cy="73" r="5.5" fill="#9ab0c8"/><ellipse cx="37" cy="84" rx="7.5" ry="9.5" fill="#adc0d0"/><ellipse cx="53" cy="84" rx="7.5" ry="9.5" fill="#adc0d0"/><ellipse cx="36" cy="92" rx="9.5" ry="4.5" fill="#607080"/><ellipse cx="54" cy="92" rx="9.5" ry="4.5" fill="#607080"/><rect x="37" y="55" width="15" height="10" rx="2" fill="#081e3e" opacity=".8"/><circle cx="41" cy="60" r="1.8" fill="#00e5f5" opacity=".8"/><circle cx="49" cy="60" r="1.8" fill="#e8c96a" opacity=".8"/></svg>`,
+            rocket: `<svg viewBox="0 0 60 110" xmlns="http://www.w3.org/2000/svg"><path d="M12 88 Q30 112 48 88" fill="rgba(255,140,0,.65)"/><path d="M17 88 Q30 108 43 88" fill="rgba(255,210,0,.55)"/><path d="M30 4 L54 52 L54 88 L6 88 L6 52 Z" fill="#c0d0ee" stroke="#98b0d8" stroke-width="1.5"/><path d="M30 4 L54 52 L6 52 Z" fill="#e0eaff"/><circle cx="30" cy="62" r="11" fill="#081428"/><circle cx="28" cy="60" r="3.5" fill="rgba(232,201,106,.55)"/><path d="M6 70 L0 88 L10 85 Z" fill="#98b0d8"/><path d="M54 70 L60 88 L50 85 Z" fill="#98b0d8"/></svg>`,
+            satellite: `<svg viewBox="0 0 130 76" xmlns="http://www.w3.org/2000/svg"><rect x="46" y="22" width="38" height="32" rx="3" fill="#aabcce" stroke="#8898aa" stroke-width="1.5"/><rect x="2" y="26" width="44" height="20" rx="2" fill="#182e88" stroke="#3856b8" stroke-width="1"/><rect x="84" y="26" width="44" height="20" rx="2" fill="#182e88" stroke="#3856b8" stroke-width="1"/><line x1="46" y1="38" x2="2" y2="38" stroke="#8898aa" stroke-width="1.5"/><line x1="84" y1="38" x2="128" y2="38" stroke="#8898aa" stroke-width="1.5"/><circle cx="65" cy="38" r="5.5" fill="#e8c96a"/><line x1="14" y1="26" x2="14" y2="46" stroke="rgba(232,201,106,.3)" stroke-width=".8"/><line x1="26" y1="26" x2="26" y2="46" stroke="rgba(232,201,106,.3)" stroke-width=".8"/><line x1="104" y1="26" x2="104" y2="46" stroke="rgba(232,201,106,.3)" stroke-width=".8"/><line x1="116" y1="26" x2="116" y2="46" stroke="rgba(232,201,106,.3)" stroke-width=".8"/></svg>`,
+            ufo: `<svg viewBox="0 0 150 90" xmlns="http://www.w3.org/2000/svg"><ellipse cx="75" cy="62" rx="68" ry="20" fill="#243e62" stroke="#3a5e8a" stroke-width="1.5"/><ellipse cx="75" cy="54" rx="44" ry="28" fill="#18386a" stroke="#2a5898" stroke-width="1.5"/><ellipse cx="75" cy="42" rx="26" ry="18" fill="#08162e" stroke="#2a5898" stroke-width="1"/><ellipse cx="69" cy="36" rx="9" ry="7" fill="rgba(232,201,106,.28)"/><circle cx="30" cy="66" r="6" fill="#e8c96a" opacity=".75"/><circle cx="55" cy="74" r="6" fill="#e53935" opacity=".75"/><circle cx="95" cy="74" r="6" fill="#e8c96a" opacity=".75"/><circle cx="120" cy="66" r="6" fill="#00e5f5" opacity=".75"/></svg>`,
+            planetA: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pA3" cx="36%" cy="32%" r="66%"><stop offset="0%" stop-color="#4020a0"/><stop offset="100%" stop-color="#060412"/></radialGradient></defs><circle cx="90" cy="90" r="82" fill="url(#pA3)"/><ellipse cx="90" cy="90" rx="124" ry="22" fill="none" stroke="rgba(232,201,106,.28)" stroke-width="3" transform="rotate(-22,90,90)"/><ellipse cx="90" cy="90" rx="124" ry="22" fill="none" stroke="rgba(232,201,106,.1)" stroke-width="7" transform="rotate(-22,90,90)"/></svg>`,
+            planetB: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pB3" cx="38%" cy="34%" r="64%"><stop offset="0%" stop-color="#802808"/><stop offset="100%" stop-color="#140402"/></radialGradient></defs><circle cx="80" cy="80" r="76" fill="url(#pB3)"/><circle cx="80" cy="80" r="76" fill="none" stroke="rgba(232,201,106,.15)" stroke-width="2"/></svg>`,
+            comet: `<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><path d="M130 30 Q90 10 0 22 Q90 18 130 30Z" fill="rgba(232,201,106,.14)"/><path d="M130 30 Q90 44 0 38 Q90 42 130 30Z" fill="rgba(232,201,106,.09)"/><circle cx="148" cy="30" r="18" fill="#7a6858" stroke="#5a4838" stroke-width="1.5"/><circle cx="176" cy="22" r="11" fill="#625048" stroke="#423028" stroke-width="1"/></svg>`,
+            spaceStation: `<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="50" rx="30" ry="16" fill="#a8b8c8" stroke="#8898a8" stroke-width="2"/><ellipse cx="48" cy="50" rx="18" ry="11" fill="#b8c0d0" stroke="#8898a8" stroke-width="1.5"/><ellipse cx="152" cy="50" rx="18" ry="11" fill="#b8c0d0" stroke="#8898a8" stroke-width="1.5"/><rect x="2" y="16" width="36" height="14" rx="2" fill="#182888" stroke="#3848b8" stroke-width="1"/><rect x="2" y="70" width="36" height="14" rx="2" fill="#182888" stroke="#3848b8" stroke-width="1"/><rect x="162" y="16" width="36" height="14" rx="2" fill="#182888" stroke="#3848b8" stroke-width="1"/><rect x="162" y="70" width="36" height="14" rx="2" fill="#182888" stroke="#3848b8" stroke-width="1"/><circle cx="100" cy="50" r="9" fill="#080e1e"/><circle cx="97" cy="47" r="3" fill="rgba(232,201,106,.55)"/></svg>`
+        };
+        const objs = [
+            { k: 'astronaut', x: 4, y: 8, size: 115, spd: 1.6, fx: 12, fy: -30, fr: 12, fd: 4.8 },
+            { k: 'astronaut', x: 82, y: 45, size: 90, spd: 1.0, fx: -9, fy: -24, fr: -9, fd: 6.2 },
+            { k: 'rocket', x: 88, y: 5, size: 90, spd: 2.0, fx: 7, fy: -36, fr: 18, fd: 4.0 },
+            { k: 'rocket', x: 2, y: 55, size: 72, spd: 1.2, fx: -7, fy: -24, fr: -7, fd: 7.0 },
+            { k: 'satellite', x: 65, y: 16, size: 150, spd: 0.8, fx: 13, fy: -17, fr: 6, fd: 7.8 },
+            { k: 'satellite', x: 8, y: 32, size: 125, spd: 1.3, fx: -11, fy: -20, fr: -8, fd: 5.2 },
+            { k: 'ufo', x: 53, y: 66, size: 165, spd: 0.6, fx: 11, fy: -18, fr: 4, fd: 7.5 },
+            { k: 'planetA', x: -5, y: 70, size: 255, spd: 0.4, fx: 6, fy: -12, fr: 360, fd: 20, spin: true },
+            { k: 'planetB', x: 84, y: 74, size: 215, spd: 0.3, fx: -4, fy: -10, fr: 360, fd: 28, spin: true },
+            { k: 'comet', x: 28, y: 1, size: 215, spd: 2.6, fx: 22, fy: -10, fr: 10, fd: 3.5 },
+            { k: 'spaceStation', x: 40, y: 80, size: 205, spd: 0.5, fx: -6, fy: -20, fr: 5, fd: 9.0 },
+        ];
+        const bgEl = document.getElementById('space-bg');
+        const spEls = objs.map((cfg, i) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'sp';
+            const inner = document.createElement('div');
+            inner.style.cssText = 'width:100%;height:100%;will-change:transform;';
+            inner.innerHTML = SVGs[cfg.k];
+            wrap.appendChild(inner);
+            wrap.style.cssText = `left:${cfg.x}%;top:${cfg.y}%;width:${cfg.size}px;height:auto;opacity:.5;`;
+            bgEl.appendChild(wrap);
+            wrap._inner = inner;
+            gsap.to(inner, { x: cfg.fx, y: cfg.fy, duration: cfg.fd, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: -(i * .65) });
+            if (cfg.spin) gsap.to(inner, { rotation: 360, duration: cfg.fd, ease: 'none', repeat: -1 });
+            else gsap.to(inner, { rotation: cfg.fr, duration: cfg.fd * 1.4, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: -(i * .5) });
+            return wrap;
+        });
+
+        /* ── SMOOTH SCROLL PARALLAX ── */
+        let smoothY = 0;
+        (function rl() {
+            smoothY += (window.scrollY - smoothY) * .07;
+            spEls.forEach((el, i) => gsap.set(el, { y: -(smoothY * objs[i].spd) }));
+            requestAnimationFrame(rl);
+        })();
+
+        /* ── MOUSE PARALLAX ── */
+        document.addEventListener('mousemove', e => {
+            const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+            const dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
+            const d = [.06, .04, .08, .05, .03, .065, .04, .02, .018, .09, .04];
+            spEls.forEach((el, i) => gsap.to(el._inner, { x: `+=${dx * 30 * d[i]}`, y: `+=${dy * 22 * d[i]}`, duration: 1.5, ease: 'power2.out', overwrite: false }));
+        });
+
+        /* ── BACKGROUND SHOOTING STARS (ambient) ── */
+        function bgShoot() {
+            const s = document.createElement('div');
+            const len = 60 + Math.random() * 120;
+            s.style.cssText = `position:fixed;height:1.5px;width:${len}px;background:linear-gradient(90deg,rgba(232,201,106,.8),transparent);pointer-events:none;z-index:0;border-radius:2px;`;
+            document.body.appendChild(s);
+            const sx = Math.random() * window.innerWidth, sy = Math.random() * window.innerHeight * .4;
+            gsap.set(s, { x: sx, y: sy, rotation: 28, opacity: 1 });
+            gsap.to(s, { x: sx + 230, y: sy + 100, opacity: 0, duration: .65, ease: 'power2.in', onComplete: () => s.remove() });
+        }
+        setInterval(bgShoot, 2800);
+
+        /* ── METEOR BURST — called when a word becomes visible ── */
+        function meteorBurst(x, y, count = 6) {
+            for (let i = 0; i < count; i++) {
+                const m = document.createElement('div');
+                const len = 40 + Math.random() * 100;
+                const angle = -20 + Math.random() * 40; // spread: mostly horizontal right
+                const col = Math.random() > .5 ? 'rgba(232,201,106,.9)' : 'rgba(0,229,245,.8)';
+                m.style.cssText = `position:fixed;height:2px;width:${len}px;background:linear-gradient(90deg,${col},transparent);pointer-events:none;z-index:50;border-radius:3px;box-shadow:0 0 6px ${col};`;
+                document.body.appendChild(m);
+                // start slightly behind the word
+                const startX = x + Math.random() * 40 - 80;
+                const startY = y + (Math.random() - 0.5) * 80;
+                gsap.set(m, { x: startX, y: startY, rotation: angle, opacity: 1, scaleX: 0 });
+                gsap.to(m, {
+                    x: startX + len * 1.6,
+                    y: startY + Math.sin(angle * Math.PI / 180) * len * 0.6,
+                    scaleX: 1,
+                    opacity: 0,
+                    duration: .4 + Math.random() * .35,
+                    delay: i * .045,
+                    ease: 'power3.out',
+                    onComplete: () => m.remove()
+                });
+            }
+        }
+
+        /* ── SCROLL REVEAL ── */
+        const srEls = document.querySelectorAll('.sr,.sr-l,.sr-r');
+        const srObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('in'); srObserver.unobserve(e.target); }
+            });
+        }, { threshold: .15 });
+        srEls.forEach(el => srObserver.observe(el));
+
+        /* ── HERO COMPUTER ENTRANCE ── */
+        gsap.from('.computer-wrap', { opacity: 0, y: 50, scale: .9, duration: 1.1, ease: 'power3.out', delay: .5 });
+
+        /* ══════════════════════════════════════════════
+           HORIZONTAL SCROLL with meteor burst per word
+        ══════════════════════════════════════════════ */
+        const hWrapper = document.getElementById('hscrollWrapper');
+        const hPin = document.getElementById('hscrollPin');
+        const hTrack = document.getElementById('hsTrack');
+        const hWords = document.querySelectorAll('.hw');
+        const hAstro = document.getElementById('hAstro');
+
+        // Track which words have already burst to avoid repeat
+        const bursted = new Set();
+
+        function setupHScroll() {
+            const totalW = hTrack.scrollWidth;
+            const vw = window.innerWidth;
+            const travel = totalW - vw + vw * 0.35;
+
+            hWrapper.style.height = (window.innerHeight + travel) + 'px';
+
+            ScrollTrigger.getAll().forEach(t => { if (t.vars.id === 'hs') t.kill(); });
+
+            gsap.to(hTrack, {
+                x: -travel,
+                ease: 'none',
+                scrollTrigger: {
+                    id: 'hs',
+                    trigger: hWrapper,
+                    start: 'top top',
+                    end: () => `+=${travel}`,
+                    pin: hPin,
+                    anticipatePin: 1,
+                    scrub: .5,
+                    onUpdate(self) {
+                        const p = self.progress;
+                        const vw2 = window.innerWidth;
+
+                        /* — word reveal + meteor burst — */
+                        hWords.forEach((w, idx) => {
+                            const wr = w.getBoundingClientRect();
+                            const visible = wr.left < vw2 * 0.85 && wr.right > vw2 * 0.15;
+                            if (visible && !w.classList.contains('vis')) {
+                                w.classList.add('vis');
+                                // burst meteors from word's center position
+                                if (!bursted.has(idx) && !w.classList.contains('sep')) {
+                                    bursted.add(idx);
+                                    const cx = wr.left + wr.width / 2;
+                                    const cy = wr.top + wr.height / 2;
+                                    meteorBurst(cx, cy, 8);
+                                }
+                            } else if (!visible) {
+                                w.classList.remove('vis');
+                                bursted.delete(idx); // allow re-burst if scrolled back
+                            }
+                        });
+
+                        /* — astronaut sine-wave — */
+                        const astX = -120 + p * (vw2 + 240);
+                        const sinY = Math.sin(p * Math.PI * 3.6) * 95;
+                        const tilt = Math.cos(p * Math.PI * 3.6) * 24;
+                        const astH = hAstro.offsetHeight || 110;
+                        gsap.set(hAstro, {
+                            x: astX,
+                            y: `calc(50vh - ${astH / 2}px + ${sinY}px)`,
+                            rotation: tilt,
+                            top: 0
+                        });
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('load', setupHScroll);
+        window.addEventListener('resize', () => { setupHScroll(); ScrollTrigger.refresh(); });
+        setTimeout(setupHScroll, 300);
+
+        /* ── ROCKET TIMELINE ── */
+        const tlOuter = document.getElementById('tlOuter');
+        const tlRocket = document.getElementById('tlRocket');
+        const tlProg = document.getElementById('tlProg');
+        const tlItemEls = Array.from(document.querySelectorAll('.tl-item'));
+
+        function getRelNodeTops() {
+            const outerTop = tlOuter.offsetTop;
+            return tlItemEls.map(item => {
+                const dot = item.querySelector('.tl-dot');
+                let el = dot, top = 0;
+                while (el && el !== document.body) { top += el.offsetTop; el = el.offsetParent; }
+                return top - outerTop + dot.offsetHeight / 2;
+            });
+        }
+        function initTimeline() {
+            const nodeTops = getRelNodeTops();
+            const outerH = tlOuter.offsetHeight;
+            ScrollTrigger.create({
+                trigger: '#s4', start: 'top 75%', end: 'bottom 25%', scrub: .5,
+                onUpdate(self) {
+                    const rktTop = self.progress * (outerH - 41);
+                    gsap.set(tlRocket, { top: rktTop + 41 });
+                    gsap.set(tlProg, { height: Math.max(0, rktTop) });
+                    tlItemEls.forEach((item, i) => {
+                        const dot = item.querySelector('.tl-dot');
+                        if (nodeTops[i] <= rktTop + 41) { item.classList.add('lit'); dot.classList.add('lit'); }
+                        else { item.classList.remove('lit'); dot.classList.remove('lit'); }
+                    });
+                }
+            });
+        }
+        gsap.from('.tl-item', { scrollTrigger: { trigger: '#tlItems', start: 'top 82%' }, opacity: 0, x: i => i % 2 === 0 ? -30 : 30, duration: .45, stagger: .05, ease: 'power2.out' });
+        setTimeout(() => { initTimeline(); ScrollTrigger.refresh(); }, 400);
+
+        function initS2ShootingStars() {
+            const s5 = document.getElementById('s2');
+            if (!s5) return;
+
+            // 1. Tạo container chứa sao băng
+            const wrap = document.createElement('div');
+            wrap.className = 's2-stars-wrap';
+            s5.appendChild(wrap);
+
+            const starCount = 35; // Số lượng vệt sao băng bạn muốn
+
+            // 2. Tự động sinh ra các sao băng
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 's2-star-pill';
+
+                // Random kích thước hình viên thuốc (rộng từ 6px-14px)
+                const w = 6 + Math.random() * 8;
+                const h = w * (2.5 + Math.random() * 3); // Chiều cao gấp 2.5 đến 5.5 lần chiều rộng
+
+                // Random vị trí xuất hiện (0% đến 100% của section)
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+
+                // Tốc độ bay (parallax speed): Các vật nhỏ có thể bay chậm hơn, vật to bay nhanh hơn
+                const speed = 0.5 + Math.random() * 2.5;
+
+                // Áp dụng style
+                star.style.width = `${w}px`;
+                star.style.height = `${h}px`;
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+
+                // Lâu lâu đảo ngược màu gradient cho tự nhiên hơn
+                if (Math.random() > 0.5) {
+                    star.style.background = 'linear-gradient(180deg, #74d2ff 0%, #d4a5ff 100%)';
+                }
+
+                wrap.appendChild(star);
+
+                // 3. Setup GSAP ScrollTrigger
+                // Sử dụng keyframes trong ScrollTrigger để xử lý việc Hiện ra -> Bay lên -> Biến mất
+                gsap.to(star, {
+                    scrollTrigger: {
+                        trigger: '#s2',
+                        start: 'top bottom', // Kích hoạt khi #s5 bắt đầu xuất hiện ở cạnh dưới màn hình
+                        end: 'bottom top',   // Kết thúc khi #s5 khuất hẳn lên cạnh trên màn hình
+                        scrub: 1.5           // Số càng lớn (1.5) thì sao băng trôi càng mượt và trễ (lag) xíu tạo độ nghệ thuật
+                    },
+                    keyframes: {
+                        // Ban đầu: Nằm thấp ở dưới và mờ
+                        "0%": { y: 250 * speed, opacity: 0 },
+
+                        // Cuộn được 20%: Sáng dần lên
+                        "20%": { opacity: 0.6 + Math.random() * 0.4 },
+
+                        // Cuộn được 80%: Giữ độ sáng
+                        "80%": { opacity: 0.6 + Math.random() * 0.4 },
+
+                        // Cuộn đến cuối: Vút lên cao và mờ dần
+                        "100%": { y: -400 * speed, opacity: 0 }
+                    },
+                    ease: "none" // Tắt gia tốc để tốc độ cuộn đều theo tay người dùng
+                });
+            }
+        }
+
+        // Gọi hàm ngay sau khi load
+        initS2ShootingStars();
+    </script>
+</body>
+
+</html>
