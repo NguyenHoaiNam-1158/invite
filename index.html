@@ -144,7 +144,7 @@
             left: 0;
             right: 0;
             z-index: 500;
-            padding: 16px 52px;
+            padding: 12px 28px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -159,8 +159,8 @@
         }
 
         .nav-left .n1 {
-            font-size: .58rem;
-            letter-spacing: 3px;
+            font-size: .62rem;
+            letter-spacing: 2px;
             color: var(--gold);
             text-transform: uppercase;
             font-family: 'Space Mono', monospace;
@@ -168,14 +168,14 @@
         }
 
         .nav-left .n2 {
-            font-size: .92rem;
+            font-size: .98rem;
             font-weight: 800;
             letter-spacing: .3px
         }
 
         .nav-star {
-            width: 40px;
-            height: 40px;
+            width: 55px;
+            height: 45px;
             background: var(--red);
             border-radius: 50%;
             display: flex;
@@ -200,7 +200,7 @@
 
         .nav-right {
             font-family: 'Space Mono', monospace;
-            font-size: .62rem;
+            font-size: .76rem;
             letter-spacing: 2px;
             color: var(--muted);
             text-align: right
@@ -226,7 +226,8 @@
         /* floating label — small, uppercase, monospace */
         .label {
             font-family: 'Space Mono', monospace;
-            font-size: .6rem;
+            font-size: .8rem;
+            font-weight: bold;
             letter-spacing: 5px;
             text-transform: uppercase;
             opacity: .6;
@@ -281,7 +282,7 @@
             border-radius: 100px;
             font-size: .72rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             color: var(--gold);
             text-transform: uppercase;
             background: rgba(232, 201, 106, .06);
@@ -323,19 +324,19 @@
    S1 — HERO (computer floating, text scattered)
 ═══════════════════════════════════════════ */
         #s1 {
-            min-height: 100vh;
-            padding-top: 90px;
+            min-height: 20vh;
+            padding-top: 10px;
             overflow: hidden;
         }
 
         .s1-inner {
             position: relative;
-            width: 100%;
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
             min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            /* grid-template-columns: 1fr 1fr; */
             align-items: center;
             gap: 40px;
         }
@@ -343,8 +344,10 @@
         /* Text column */
         .s1-text {
             position: relative;
-            z-index: 3;
+            z-index: 2;
             padding: 40px 0;
+
+            width: 130%;
         }
 
         .s1-eyebrow {
@@ -361,12 +364,13 @@
             font-size: clamp(2.4rem, 5.5vw, 5rem);
             font-weight: 900;
             line-height: .95;
-            letter-spacing: -2px;
+            letter-spacing: 2px;
             margin-bottom: 24px;
         }
 
         .s1-title .t-line {
-            display: block
+            display: block;
+            padding: 12px 0;
         }
 
         .s1-title .t-gold {
@@ -606,21 +610,21 @@
    S2 — THƯ MỜI (editorial: moon left, text right scattered)
 ═══════════════════════════════════════════ */
         #s2 {
-            min-height: 120vh;
+            min-height: 20vh;
             padding: 0 52px;
             overflow: hidden;
         }
 
         .s2-inner {
             position: relative;
-            width: 100%;
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            min-height: 120vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            min-height: 90vh;
+            display: flex;
+            /* grid-template-columns: 1fr 1fr; */
             align-items: center;
-            gap: 60px;
+            gap: 40px;
         }
 
         .s2-moon {
@@ -759,8 +763,9 @@
 
         .s2-kicker {
             font-family: 'Space Mono', monospace;
-            font-size: .58rem;
-            letter-spacing: 4px;
+            font-size: .70rem;
+            font-weight: bold;
+            letter-spacing: 3px;
             color: var(--gold);
             text-transform: uppercase;
             margin-bottom: 10px;
@@ -970,7 +975,7 @@
             font-size: clamp(2.5rem, 5.5vw, 5rem);
             font-weight: 900;
             letter-spacing: -2px;
-            line-height: 1
+            line-height: 1.1;
         }
 
         .s4-hl span {
@@ -1146,7 +1151,7 @@
             backdrop-filter: blur(8px);
             border-radius: 5px;
             font-size: .85rem;
-            font-weight: 600;
+            font-weight: 500;
             line-height: 1.55;
             color: rgba(240, 246, 255, .68);
             transition: all .3s
@@ -1229,7 +1234,7 @@
             display: flex;
             gap: 32px;
             flex-wrap: wrap;
-            justify-content: flex-start
+            justify-content: center;
         }
 
         .lego-wrap {
@@ -1258,7 +1263,7 @@
 
         .lego-card {
             position: relative;
-            width: 210px
+            width: 240px
         }
 
         .lego-svg-el {
@@ -1504,72 +1509,6 @@
         </section>
 
         <div class="divider"></div>
-
-        <!-- ════════════════════════════════════════
-     HORIZONTAL SCROLL — câu kính mời lớn
-════════════════════════════════════════ -->
-        <div id="hscrollWrapper">
-            <section id="hscroll">
-                <div class="hscroll-pin" id="hscrollPin">
-                    <div class="hs-label">Cuộn để đọc →</div>
-
-                    <!-- Astronaut -->
-                    <div id="hAstro">
-                        <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="45" cy="62" rx="21" ry="25" fill="#c4d4e8" stroke="#9ab0c8"
-                                stroke-width="1.5" />
-                            <circle cx="45" cy="33" r="19" fill="#ddeeff" stroke="#9ac0de" stroke-width="2" />
-                            <ellipse cx="45" cy="31" rx="12" ry="10.5" fill="#18386a" opacity=".92" />
-                            <ellipse cx="41" cy="28" rx="3.5" ry="2.8" fill="rgba(0,229,245,.42)" />
-                            <ellipse cx="26" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5"
-                                transform="rotate(-10,26,62)" />
-                            <ellipse cx="64" cy="62" rx="6.5" ry="13" fill="#c4d4e8" stroke="#9ab0c8" stroke-width="1.5"
-                                transform="rotate(10,64,62)" />
-                            <circle cx="20" cy="73" r="5.5" fill="#9ab0c8" />
-                            <circle cx="70" cy="73" r="5.5" fill="#9ab0c8" />
-                            <ellipse cx="37" cy="84" rx="7.5" ry="9.5" fill="#adc0d0" />
-                            <ellipse cx="53" cy="84" rx="7.5" ry="9.5" fill="#adc0d0" />
-                            <ellipse cx="36" cy="92" rx="9.5" ry="4.5" fill="#607080" />
-                            <ellipse cx="54" cy="92" rx="9.5" ry="4.5" fill="#607080" />
-                            <rect x="37" y="55" width="15" height="10" rx="2" fill="#081e3e" opacity=".8" />
-                            <circle cx="41" cy="60" r="1.8" fill="#00e5f5" opacity=".8" />
-                            <circle cx="49" cy="60" r="1.8" fill="#e8c96a" opacity=".8" />
-                            <rect x="33" y="55" width="7" height="14" rx="3" fill="#607888" />
-                            <circle cx="36" cy="70" r="2.5" fill="rgba(0,229,245,.65)" />
-                        </svg>
-                    </div>
-
-                    <div class="hs-track" id="hsTrack">
-                        <span class="hw c3">Sự</span>
-                        <span class="hw c3">hiện diện</span>
-                        <span class="hw c3">của</span>
-                        <span class="hw c3">quý vị</span>
-                        <span class="hw c3">là</span>
-                        <span class="hw c3">niềm</span>
-                        <span class="hw c3">vinh dự</span>
-                        <span class="hw sep">·</span>
-                        <span class="hw c3">của</span>
-                        <span class="hw c3">chúng tôi</span>
-                        <span class="hw sep">✦</span>
-                        <span class="hw c3">Hân hạnh</span>
-                        <span class="hw c3">và</span>
-                        <span class="hw c3">mong chờ</span>
-                        <span class="hw c3">được đón tiếp</span>
-                        <span class="hw sep">·</span>
-                        <span class="hw c3" style="font-size:clamp(3rem,7vw,6.5rem)">Trân trọng!</span>
-                    </div>
-
-                    <div class="hs-hint">
-                        <span class="hs-arr">→</span>
-                        <span>Cuộn để khám phá</span>
-                        <span class="hs-arr">→</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <div class="divider"></div>
-
         <!-- ════════════════════════════════════════
      S4 — CHƯƠNG TRÌNH (rocket timeline, full width)
 ════════════════════════════════════════ -->
@@ -1762,7 +1701,7 @@
                             <div class="tl-dot"></div><span class="tl-n">18</span>
                         </div>
                         <div class="tl-r">
-                            <div class="tl-card">Bầu Đoàn Đại biểu tham dự Đại hội TNCS Trường ĐHNT – Lần IX</div>
+                            <div class="tl-card">Bầu Đoàn Đại biểu tham dự Đại hội TNCS Trường ĐHNTT – Lần IX</div>
                         </div>
                     </div>
                     <div class="tl-item">
